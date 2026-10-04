@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using PolyType;
 
 namespace GLD.SerializerBenchmark
 {
@@ -51,10 +52,32 @@ namespace GLD.SerializerBenchmark
 
         public virtual object ToDomain(object decoded) => decoded;
 
-        public abstract string Serialize(object serializable);
-        public abstract object Deserialize(string serialized);
+        public virtual string Serialize<T>(T serializable)
+            where T : IShapeable<T>
+            => Serialize((object)serializable);
 
-        public abstract void Serialize(object serializable, Stream outputStream);
-        public abstract object Deserialize(Stream inputStream);
+        public virtual object Deserialize<T>(string serialized)
+            where T : IShapeable<T>
+            => Deserialize(serialized);
+
+        public virtual void Serialize<T>(T serializable, Stream outputStream)
+            where T : IShapeable<T>
+            => Serialize((object)serializable, outputStream);
+
+        public virtual object Deserialize<T>(Stream inputStream)
+            where T : IShapeable<T>
+            => Deserialize(inputStream);
+
+        public virtual string Serialize(object serializable)
+            => throw new NotSupportedException($"{Name} does not implement string serialization.");
+
+        public virtual object Deserialize(string serialized)
+            => throw new NotSupportedException($"{Name} does not implement string deserialization.");
+
+        public virtual void Serialize(object serializable, Stream outputStream)
+            => throw new NotSupportedException($"{Name} does not implement stream serialization.");
+
+        public virtual object Deserialize(Stream inputStream)
+            => throw new NotSupportedException($"{Name} does not implement stream deserialization.");
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using PolyType;
 
 namespace GLD.SerializerBenchmark
 {
@@ -28,10 +29,14 @@ namespace GLD.SerializerBenchmark
         /// <summary>Untimed domain conversion after timed deserialize.</summary>
         object ToDomain(object decoded);
 
-        string Serialize(object serializable);
-        object Deserialize(string serialized);
+        string Serialize<T>(T serializable)
+            where T : IShapeable<T>;
+        object Deserialize<T>(string serialized)
+            where T : IShapeable<T>;
 
-        void Serialize(object serializable, Stream outputStream);
-        object Deserialize(Stream inputStream);
+        void Serialize<T>(T serializable, Stream outputStream)
+            where T : IShapeable<T>;
+        object Deserialize<T>(Stream inputStream)
+            where T : IShapeable<T>;
     }
 }
